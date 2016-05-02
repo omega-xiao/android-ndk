@@ -37,3 +37,15 @@ model {
         }
     }
 }
+// This is just copy out the header file and built lib into distribution
+// directory for clint application to use; it is a small overhead of this sample:
+//    both lib and app are put inside one project space [save maintenance time]
+task(distributeLib, type : Copy) {
+
+    // trigger build library
+    dependsOn assemble
+    into '../distribution/'
+    from('build/intermediates/binaries/debug/lib') {
+        into 'lib/'
+    }
+}

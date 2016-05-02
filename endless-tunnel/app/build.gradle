@@ -15,8 +15,22 @@
  */
 
 apply plugin: 'com.android.model.application'
+def lib_distribution_root = '../distribution'
 
 model {
+    repositories {
+        libs(PrebuiltLibraries) {
+            // Configure one pre-built lib: shared
+            nativeActivity {
+                // Inform Android Studio where header file dir for this lib
+                headers.srcDir "${lib_distribution_root}/include"
+                // Inform Android Studio where lib is -- each ABI should have a lib file
+                binaries.withType(StaticLibraryBinary) {
+                    staticLibraryFile = file("${lib_distribution_root}/lib/${targetPlatform.getName()}/libnative-activity.a")
+                }
+            }
+        }
+    }
     android {
         compileSdkVersion = 23
         buildToolsVersion = '23.0.2'
@@ -49,7 +63,8 @@ model {
             main {
                 jni {
                     dependencies {
-                        project ':nativeactivity' linkage 'static'
+//                        project ':nativeactivity' linkage 'static'
+                        library 'nativeActivity' linkage 'static'
                     }
                 }
             }
